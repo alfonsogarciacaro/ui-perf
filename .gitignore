@@ -1,2 +1,6 @@
 elm-stuff
 node_modules
+packages
+paket-files
+**/bin/
+**/obj/

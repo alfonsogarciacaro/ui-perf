@@ -1,13 +1,4 @@
-(**
- - title: Todo MVC
- - tagline: The famous todo mvc ported from elm-todomvc
-*)
-
-
-#r "node_modules/fable-core/Fable.Core.dll"
-#r "node_modules/fable-react/Fable.React.dll"
-#r "node_modules/fable-elmish/Fable.Elmish.dll"
-#r "node_modules/fable-elmish-react/Fable.Elmish.React.dll"
+module App
 
 open Fable.Core
 open Fable.Import
@@ -151,11 +142,11 @@ let viewInput (model:string) dispatch =
         R.input [
             ClassName "new-todo"
             Placeholder "What needs to be done?"
-            Value (U2.Case1 model)
+            Value model
             onEnter Add dispatch
             OnChange ((fun (ev:React.FormEvent) -> ev.target?value) >> unbox >> UpdateField >> dispatch)
             AutoFocus true
-        ] []
+        ]
     ]
 
 let internal classList classes =
@@ -173,7 +164,6 @@ let viewEntry todo dispatch =
               Type "checkbox"
               Checked todo.completed
               OnChange (fun _ -> Check (todo.id,(not todo.completed)) |> dispatch) ]
-            []
           R.label
             [ OnDoubleClick (fun _ -> EditingEntry (todo.id,true) |> dispatch) ]
             [ unbox todo.description ]
@@ -184,13 +174,12 @@ let viewEntry todo dispatch =
         ]
       R.input
         [ ClassName "edit"
-          DefaultValue (U2.Case1 todo.description)
+          DefaultValue todo.description
           Name "title"
           Id ("todo-" + (string todo.id))
           OnInput (fun ev -> UpdateEntry (todo.id, unbox ev.target?value) |> dispatch)
           OnBlur (fun _ -> EditingEntry (todo.id,false) |> dispatch)
           onEnter (EditingEntry (todo.id,false)) dispatch ]
-        []
     ]
 
 let viewEntries visibility entries dispatch =
@@ -215,7 +204,6 @@ let viewEntries visibility entries dispatch =
             Name "toggle"
             Checked allCompleted
             OnChange (fun _ -> CheckAll (not allCompleted) |> dispatch)]
-          []
         R.label
           [ HtmlFor "toggle-all" ]
           [ unbox "Mark all as complete" ]
